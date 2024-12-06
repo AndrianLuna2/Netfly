@@ -1,26 +1,21 @@
 import React, { useState } from 'react';
 
 function Nav({ onSearch }) {
-  const [searchQuery, setSearchQuery] = useState(''); // Local state for search input
+  const [query, setQuery] = useState('');
 
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value); // Update search query as user types
-  };
-
-  const handleSearchSubmit = (e) => {
-    e.preventDefault(); // Prevent form submission (page reload)
-    onSearch(searchQuery); // Pass search query to parent (App.js)
+  const handleSearch = (e) => {
+    e.preventDefault();
+    onSearch(query);
   };
 
   return (
-    <nav>
-      {/* Search Form */}
-      <form onSubmit={handleSearchSubmit} className="search-form">
+    <nav className="nav">
+      <form onSubmit={handleSearch}>
         <input
           type="text"
-          value={searchQuery}
-          onChange={handleSearchChange}
-          placeholder="Search for movies..."
+          placeholder="Search movies..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
         />
         <button type="submit">Search</button>
       </form>

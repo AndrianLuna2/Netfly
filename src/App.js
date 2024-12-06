@@ -14,26 +14,40 @@ function App() {
   const [filteredMovies, setFilteredMovies] = useState([]);
   const [page, setPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
-  const [selectedMovie, setSelectedMovie] = useState(null); // State for selected movie
+  const [selectedMovie, setSelectedMovie] = useState(null);
 
   const apiUrl = `https://www.omdbapi.com/?s=${searchQuery || 'movie'}&page=${page}&apikey=7606218f`;
 
   useEffect(() => {
     const fetchMovies = async () => {
       setLoading(true);
-      setError(null); // Reset error state before fetching
+      setError(null);
 
       try {
-        const response = await fetch(apiUrl); // Using fetch instead of Axios
+        const response = await fetch(apiUrl);
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status} - ${response.statusText}`);
         }
 
-        const data = await response.json(); // Parse the JSON response
+        const data = await response.json();
 
         if (data.Response === 'True') {
-          setMovies((prevMovies) => [...prevMovies, ...data.Search]);
+          const detailedMovies = [];
+          for (const movie of data.Search) {
+            const movieDetailsUrl = `https://www.omdbapi.com/?i=${movie.imdbID}&apikey=7606218f`;
+            const detailsResponse = await fetch(movieDetailsUrl);
+
+            if (!detailsResponse.ok) {
+              console.warn(`Failed to fetch details for movie ID: ${movie.imdbID}`);
+              continue;
+            }
+
+            const detailsData = await detailsResponse.json();
+            detailedMovies.push(detailsData);
+          }
+
+          setMovies((prevMovies) => [...prevMovies, ...detailedMovies]);
           setTotalResults(data.totalResults);
         } else {
           setError('No movies found.');
@@ -51,8 +65,8 @@ function App() {
 
   useEffect(() => {
     if (category) {
-      const filtered = movies.filter((movie) =>
-        movie.Genre && movie.Genre.toLowerCase().includes(category.toLowerCase())
+      const filtered = movies.filter(
+        (movie) => movie.Genre && movie.Genre.toLowerCase().includes(category.toLowerCase())
       );
       setFilteredMovies(filtered);
     } else {
@@ -61,15 +75,20 @@ function App() {
   }, [category, movies]);
 
   const handleSearch = (query) => {
-    setMovies([]); // Reset movie list
-    setSearchQuery(query); // Set search query
-    setPage(1); // Reset to first page of results
+    setSearchQuery(query);
+    setPage(1);
+
+    if (query.trim() === '') {
+      setMovies([]);
+      setFilteredMovies([]);
+      setCategory('');
+    } else {
+      setMovies([]);
+    }
   };
 
   const handleCategoryChange = (e) => {
     setCategory(e.target.value);
-    setPage(1);
-    setMovies([]);
   };
 
   const loadMoreMovies = () => {
@@ -78,7 +97,6 @@ function App() {
     }
   };
 
-  // Function to handle movie selection
   const handleMovieClick = async (movieId) => {
     const movieDetailsUrl = `https://www.omdbapi.com/?i=${movieId}&apikey=7606218f`;
 
@@ -90,7 +108,11 @@ function App() {
 
       const data = await response.json();
       if (data.Response === 'True') {
-        setSelectedMovie(data); // Set the selected movie details
+        if (selectedMovie && selectedMovie.imdbID === movieId) {
+          setSelectedMovie(null);
+        } else {
+          setSelectedMovie(data);
+        }
       } else {
         setSelectedMovie(null);
       }
@@ -105,7 +127,7 @@ function App() {
       <Header />
       {selectedMovie && (
         <div className="movie-description">
-          <div className="movie-details">
+          <div className="movie-details" onClick={() => setSelectedMovie(null)}>
             <img
               src={selectedMovie.Poster !== 'N/A' ? selectedMovie.Poster : 'https://via.placeholder.com/300x450?text=No+Image'}
               alt={selectedMovie.Title}

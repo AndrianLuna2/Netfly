@@ -1,28 +1,28 @@
-/* General Styling */
+
 body {
   font-family: 'Arial', sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #101010; /* Dark theme background */
-  color: #f5f5f5; /* Light text color */
+  background-color: #101010; 
+  color: #f5f5f5; 
 }
 
-/* Header */
+
 header {
   background-color: #181818;
-  padding: 20px 0;
+  padding: 10px 0; 
   text-align: center;
-  color: #e50914; /* Netflix Red for the logo */
-  font-size: 2.5rem;
+  color: #e50914; 
+  font-size: 2rem; 
   font-weight: bold;
-  letter-spacing: 2px;
+  letter-spacing: 1px; 
   position: sticky;
   top: 0;
   z-index: 1000;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.5);
 }
 
-/* Navbar Styling */
+
 nav {
   background-color: #181818;
   padding: 10px 20px;
@@ -42,10 +42,10 @@ nav a {
 }
 
 nav a:hover {
-  color: #e50914; /* Netflix Red */
+  color: #e50914; 
 }
 
-/* Search Form */
+
 .search-form {
   display: flex;
   justify-content: center;
@@ -79,12 +79,13 @@ nav a:hover {
   background-color: #b20710;
 }
 
-/* Movie List Styles */
+
 .movie-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
   gap: 15px;
   padding: 20px;
+  justify-content: center;
 }
 
 .movie-card {
@@ -126,7 +127,7 @@ nav a:hover {
   font-weight: bold;
 }
 
-/* Movie Description */
+
 .movie-description {
   background-color: #222;
   color: #f5f5f5;
@@ -148,7 +149,7 @@ nav a:hover {
   margin: 5px 0;
 }
 
-/* Footer */
+
 footer {
   background-color: #181818;
   color: #f5f5f5;
@@ -168,7 +169,7 @@ footer a:hover {
   text-decoration: underline;
 }
 
-/* Load More Button */
+
 button.load-more {
   display: block;
   margin: 20px auto;
@@ -185,7 +186,7 @@ button.load-more:hover {
   background-color: #b20710;
 }
 
-/* Responsive Design */
+
 @media (max-width: 768px) {
   .movie-card img {
     height: 180px;
